@@ -20,5 +20,6 @@ main()
     dtime = chr_time_to_secs(&timer);
     printf("Approx 1 second delay produces time interval of %g secs\n",
 	   dtime);
+    printf("Estimated resolution of timing is %g nanosecs\n", chr_approx_resolution() * 1.0e9);
     return 0;
 }

@@ -92,3 +92,16 @@ chr_time_to_nanosecs(chr_time *time)
     return ((double)((struct timeval*)time)->tv_sec)*1000000000.0 + 
 	((double)((struct timeval*)time)->tv_usec*1000.0);
 }
+
+extern double
+chr_approx_resolution()
+{
+    struct timeval start, stop, diff;
+    gettimeofday(&start, NULL);
+    gettimeofday(&stop, NULL);
+    while(start.tv_usec == stop.tv_usec) {
+	gettimeofday(&stop, NULL);
+    }
+    chr_timer_diff((chr_time*)&diff, (chr_time*)&stop, (chr_time*)&start);
+    return chr_time_to_secs((chr_time*)&diff);
+}

@@ -21,6 +21,17 @@ chr_get_time( chr_time *time)
     __asm__ __volatile__ ("rdtsc" : "=a" (t->ints.low), "=d" (t->ints.high));
 }
 
+static int
+get_resolution()
+{
+    register int tick1;
+    register int tick2;
+    int junk;
+    __asm__ __volatile__ ("rdtsc" : "=a" (tick1), "=d" (junk));
+    __asm__ __volatile__ ("rdtsc" : "=a" (tick2), "=d" (junk));
+    return tick2 - tick1;
+}
+
 extern void
 chr_timer_start( chr_time *time)
 {
@@ -120,4 +131,20 @@ extern double
 chr_time_to_nanosecs(chr_time *time)
 {
     return chr_time_to_secs(time) * 1000000000.0;
+}
+
+extern double
+chr_approx_resolution()
+{
+    long long res = get_resolution();
+    int i;
+    for (i=0; i < 5; i++) {
+	if ((res < 0) || (res > 1024)) {
+	    res = get_resolution();
+	}
+    }
+    if (clock_frequency == 0.0) {
+	frequency_init();
+    }
+    return chr_time_to_secs(&res);
 }

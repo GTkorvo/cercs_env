@@ -66,3 +66,13 @@ chr_time_to_nanosecs(chr_time *time)
 {
   return ((double) *((hrtime_t*)time));
 }
+
+extern double
+chr_approx_resolution()
+{
+    hrtime_t start, stop, diff;
+    start = gethrtime();
+    stop = gethrtime();
+    diff = stop - start;
+    return chr_time_to_secs(&diff);
+}

@@ -43,4 +43,7 @@ chr_time_to_millisecs (chr_time *time);
 extern double
 chr_time_to_secs (chr_time *time);
 
+extern double 
+chr_approx_resolution();
+
 #endif
