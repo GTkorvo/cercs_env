@@ -158,6 +158,26 @@ cercs_getenv(char *name)
     value = getenv(name);
     if (value != NULL) return value;
 
+#ifdef HAVE_WINDOWS_H
+    {
+	DWORD   dwType;
+	DWORD   dwSize;
+	HKEY hKey;
+	if (RegOpenKeyEx(HKEY_LOCAL_MACHINE, "Software\\PBIO", 0, KEY_READ, 
+			 &hKey) == ERROR_SUCCESS) {
+	    if (RegQueryValueEx(hKey, name, NULL, &dwType, NULL, 
+				&dwSize) == ERROR_SUCCESS) {
+		value = malloc(dwSize);
+    		if (RegQueryValueEx(hKey, name, NULL, &dwType, 
+				    value, &dwSize) != ERROR_SUCCESS) {
+		    free(name);
+		}
+	    }
+	    RegCloseKey(hKey);
+	}
+    }
+#endif
+
     /*
      * walk the table
      */
