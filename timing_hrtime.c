@@ -74,5 +74,5 @@ chr_approx_resolution()
     start = gethrtime();
     stop = gethrtime();
     diff = stop - start;
-    return chr_time_to_secs(&diff);
+    return chr_time_to_secs((chr_time*)&diff);
 }

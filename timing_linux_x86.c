@@ -146,5 +146,5 @@ chr_approx_resolution()
     if (clock_frequency == 0.0) {
 	frequency_init();
     }
-    return chr_time_to_secs(&res);
+    return chr_time_to_secs((chr_time*)&res);
 }

@@ -23,7 +23,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 dnl Checks for library functions.
 AC_CHECK_FUNCS(gethrtime)
 
-if test -n "$ac_cv_func_gethrtime"; then
+if test $ac_cv_func_gethrtime = yes; then
     TIMING=hrtime
 fi
 
