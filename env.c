@@ -119,7 +119,7 @@ init_env_table()
     for (i=0; i < value_count; i++) {
 	char *equal;
 	/* change name_values into real pointers */
-	name_values[i] = string_table + (int) name_values[i];
+	name_values[i] = string_table + (int) (long) name_values[i];
 	equal = strchr(name_values[i], '=');
 	if (equal != NULL) {
 	    *equal = 0;
