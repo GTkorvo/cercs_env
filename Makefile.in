@@ -80,18 +80,21 @@ lib_LTLIBRARIES = libcercs_env.la
 
 noinst_HEADERS = 
 
-EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c
+EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c timing_gettimeofday.c timing_linux_x86.c
 
-libcercs_env_la_SOURCES = env.c $(TIMING_C)
+libcercs_env_la_SOURCES = env.c
 libcercs_env_la_LIBADD = $(TIMING_O)
 libcercs_env_la_LDFLAGS = -no-undefined
 libcercs_env_la_DEPENDENCIES = $(TIMING_O)
 
 include_HEADERS = cercs_env.h
 
-bin_PROGRAMS = 
+bin_PROGRAMS = test_timing
 
 LIBS = @LIBS@
+
+test_timing_SOURCES = test_timing.c
+test_timing_LDADD = libcercs_env.la
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -101,9 +104,13 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 
 am_libcercs_env_la_OBJECTS = env.lo
 libcercs_env_la_OBJECTS = $(am_libcercs_env_la_OBJECTS)
-bin_PROGRAMS =
+bin_PROGRAMS = test_timing$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS)
 
+am_test_timing_OBJECTS = test_timing.$(OBJEXT)
+test_timing_OBJECTS = $(am_test_timing_OBJECTS)
+test_timing_DEPENDENCIES = libcercs_env.la
+test_timing_LDFLAGS =
 
 DEFS = @DEFS@
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I.
@@ -119,7 +126,7 @@ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 CFLAGS = @CFLAGS@
 DIST_SOURCES = $(libcercs_env_la_SOURCES) \
-	$(EXTRA_libcercs_env_la_SOURCES)
+	$(EXTRA_libcercs_env_la_SOURCES) $(test_timing_SOURCES)
 HEADERS = $(include_HEADERS) $(noinst_HEADERS)
 
 DIST_COMMON = $(include_HEADERS) $(noinst_HEADERS) ./stamp-h.in \
@@ -127,7 +134,7 @@ DIST_COMMON = $(include_HEADERS) $(noinst_HEADERS) ./stamp-h.in \
 	config/config.guess config/config.sub config/install-sh \
 	config/ltmain.sh config/missing config/mkinstalldirs configure \
 	configure.in
-SOURCES = $(libcercs_env_la_SOURCES) $(EXTRA_libcercs_env_la_SOURCES)
+SOURCES = $(libcercs_env_la_SOURCES) $(EXTRA_libcercs_env_la_SOURCES) $(test_timing_SOURCES)
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -228,6 +235,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+test_timing$(EXEEXT): $(test_timing_OBJECTS) $(test_timing_DEPENDENCIES) 
+	@rm -f test_timing$(EXEEXT)
+	$(LINK) $(test_timing_LDFLAGS) $(test_timing_OBJECTS) $(test_timing_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT) core *.core
