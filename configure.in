@@ -27,13 +27,15 @@ if test $ac_cv_func_gethrtime = yes; then
     TIMING=hrtime
 fi
 
-if test "$host_os" = linux-gnu; then
-   case $host_cpu in
-   i*86)
-    TIMING=linux_x86
+case $host_os in
+   linux-gnu | cygwin | mingw32)
+	case $GCC,$host_cpu in
+	yes,i*86)
+	    TIMING=gcc_x86
+	    ;;
+	esac
     ;;
-    esac
-fi
+esac
 
 if test -z "$TIMING"; then
     TIMING=gettimeofday
