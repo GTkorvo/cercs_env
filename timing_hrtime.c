@@ -20,6 +20,9 @@ chr_timer_stop( chr_time *time)
 {
     hrtime_t now = gethrtime();
     hrtime_t duration;
+    if (*((hrtime_t*)time) == 0) {
+	printf("Warning, timer not started  -- chr_timer_stop()\n");
+    }
     chr_timer_diff((chr_time*)&duration, (chr_time*)&now, time);
     *((hrtime_t*) time) = duration;
 }
