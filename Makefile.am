@@ -6,7 +6,7 @@ lib_LTLIBRARIES = libcercs_env.la
 
 noinst_HEADERS = 
 
-EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c
+EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c timing_gettimeofday.c
 
 libcercs_env_la_SOURCES = env.c $(TIMING_C)
 libcercs_env_la_LIBADD =  $(TIMING_O)

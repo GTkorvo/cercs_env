@@ -19,7 +19,7 @@ chr_timer_diff( chr_time *diff_time, chr_time *src1, chr_time *src2);
 extern void
 chr_timer_zero( chr_time *time);
 
-extern void
+extern int
 chr_timer_eq_zero( chr_time *time);
 
 extern void

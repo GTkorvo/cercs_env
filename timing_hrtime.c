@@ -2,8 +2,6 @@
 #include "cercs_env.h"
 
 #include <sys/time.h>
-#include "sys/uio.h"
-
 
 extern void
 chr_get_time( chr_time *time)
@@ -26,7 +24,7 @@ chr_timer_stop( chr_time *time)
     *((hrtime_t*) time) = duration;
 }
 
-extern void
+extern int
 chr_timer_eq_zero (chr_time *time)
 {
     return (*((hrtime_t*)time) == 0);
