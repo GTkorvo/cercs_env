@@ -1,6 +1,10 @@
 #ifndef CERCS_ENV_H
 #define CERCS_ENV_H
 
+#if defined(__cplusplus) || defined(c_plusplus)
+extern "C" {
+#endif
+
 extern char *cercs_getenv(char *name);
 extern int cercs_putenv(char *name_value);
 
@@ -46,4 +50,7 @@ chr_time_to_secs (chr_time *time);
 extern double 
 chr_approx_resolution();
 
+#if defined(__cplusplus) || defined(c_plusplus)
+}
+#endif
 #endif
