@@ -49,7 +49,10 @@ find_config_file()
 	} else {
 	    directory = search_path[i];
 	}
-	if (directory == NULL) continue;
+	if (directory == NULL) {
+	    i++;
+	    continue;
+	}
 
 	filename = malloc(strlen(directory) + strlen(CERCS_INIT_FILE) + 2);
 	strcpy(filename, directory);
