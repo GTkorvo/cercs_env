@@ -6,9 +6,13 @@ lib_LTLIBRARIES = libcercs_env.la
 
 noinst_HEADERS = 
 
-libcercs_env_la_SOURCES = env.c
-libcercs_env_la_LIBADD =  
+EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c
+
+libcercs_env_la_SOURCES = env.c $(TIMING_C)
+libcercs_env_la_LIBADD =  $(TIMING_O)
 libcercs_env_la_LDFLAGS = -no-undefined
+libcercs_env_la_DEPENDENCIES = $(TIMING_O)
+
 include_HEADERS = cercs_env.h
 
 

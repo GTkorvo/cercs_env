@@ -6690,6 +6690,80 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 test "$CC" = "gcc" && CFLAGS="$CFLAGS -Wall"
 CPPFLAGS="$CPPFLAGS -DATL_SOURCE"
 
+for ac_func in gethrtime
+do
+ac_ac_var=`echo "ac_cv_func_$ac_func" | $ac_tr_sh`
+echo "$as_me:6696: checking for $ac_func" >&5
+echo $ECHO_N "checking for $ac_func... $ECHO_C" >&6
+if eval "test \"\${$ac_ac_var+set}\" = set"; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line 6702 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char $ac_func (); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char $ac_func ();
+char (*f) ();
+
+int
+main ()
+{
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_$ac_func) || defined (__stub___$ac_func)
+choke me
+#else
+f = $ac_func;
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6733: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6736: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6739: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6742: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  eval "$ac_ac_var=yes"
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+eval "$ac_ac_var=no"
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:6752: result: `eval echo '${'$ac_ac_var'}'`" >&5
+echo "${ECHO_T}`eval echo '${'$ac_ac_var'}'`" >&6
+if test `eval echo '${'$ac_ac_var'}'` = yes; then
+  cat >>confdefs.h <<EOF
+#define `echo "HAVE_$ac_func" | $ac_tr_cpp` 1
+EOF
+
+fi
+done
+
+if test -n "$ac_cv_func_gethrtime"; then
+TIMING_O=timing_hrtime.lo
+TIMING_C=timing_hrtime.c
+fi
+
                ac_expanded=`(
                    test "x$prefix" = xNONE && prefix="$ac_default_prefix"
                    test "x$exec_prefix" = xNONE && exec_prefix="${prefix}"
@@ -6780,7 +6854,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:6783: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:6857: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -6956,7 +7030,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:6959: error: ambiguous option: $1
+    { { echo "$as_me:7033: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -6980,12 +7054,12 @@ Try \`$0 --help' for more information." >&2;}
   'config.h' ) CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
 
   # This is an error.
-  -*) { { echo "$as_me:6983: error: unrecognized option: $1
+  -*) { { echo "$as_me:7057: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
    { (exit 1); exit 1; }; } ;;
-  *) { { echo "$as_me:6988: error: invalid argument: $1" >&5
+  *) { { echo "$as_me:7062: error: invalid argument: $1" >&5
 echo "$as_me: error: invalid argument: $1" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -7131,6 +7205,8 @@ s,@ac_ct_OBJDUMP@,$ac_ct_OBJDUMP,;t t
 s,@CPP@,$CPP,;t t
 s,@LIBTOOL@,$LIBTOOL,;t t
 s,@LIBTOOL_DEPS@,$LIBTOOL_DEPS,;t t
+s,@TIMING_O@,$TIMING_O,;t t
+s,@TIMING_C@,$TIMING_C,;t t
 CEOF
 
 EOF
@@ -7245,7 +7321,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:7248: creating $ac_file" >&5
+    { echo "$as_me:7324: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -7263,7 +7339,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:7266: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:7342: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -7276,7 +7352,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:7279: error: cannot find input file: $f" >&5
+           { { echo "$as_me:7355: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -7337,7 +7413,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:7340: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:7416: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -7348,7 +7424,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:7351: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:7427: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -7361,7 +7437,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:7364: error: cannot find input file: $f" >&5
+           { { echo "$as_me:7440: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -7478,7 +7554,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:7481: $ac_file is unchanged" >&5
+      { echo "$as_me:7557: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \

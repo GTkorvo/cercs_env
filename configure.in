@@ -21,6 +21,15 @@ dnl Checks for header files.
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
+AC_CHECK_FUNCS(gethrtime)
+
+if test -n "$ac_cv_func_gethrtime"; then
+TIMING_O=timing_hrtime.lo
+TIMING_C=timing_hrtime.c
+fi
+
+AC_SUBST(TIMING_O)
+AC_SUBST(TIMING_C)
 
 AC_DEFINE_DIR(INSTALL_DIR, libdir, [Location of installed config file])
 
