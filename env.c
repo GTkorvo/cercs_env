@@ -158,7 +158,7 @@ cercs_getenv(char *name)
     value = getenv(name);
     if (value != NULL) {
 	if (cercs_env_verbose) {
-	    fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\".\n",
+	    fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\" (getenv).\n",
 		    name, value);
 	}
 	return value;
@@ -192,7 +192,7 @@ cercs_getenv(char *name)
 	    (env_table.name_values[i][name_len] == '=')) {
 	    value = &env_table.name_values[i][name_len + 1];
 	    if (cercs_env_verbose) {
-		fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\".\n",
+		fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\" (file).\n",
 			name, value);
 	    }
 	    return value;
