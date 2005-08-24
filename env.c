@@ -156,8 +156,13 @@ cercs_getenv(char *name)
      * actual environment values override file defaults
      */
     value = getenv(name);
-    if (value != NULL) return value;
-
+    if (value != NULL) {
+	if (cercs_env_verbose) {
+	    fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\".\n",
+		    name, value);
+	}
+	return value;
+    }
 #ifdef HAVE_WINDOWS_H
     {
 	DWORD   dwType;
@@ -185,8 +190,17 @@ cercs_getenv(char *name)
     for (i=0; i < env_table.value_count; i++) {
 	if ((strncmp(name, env_table.name_values[i], name_len) == 0) &&
 	    (env_table.name_values[i][name_len] == '=')) {
-	    return &env_table.name_values[i][name_len + 1];
+	    value = &env_table.name_values[i][name_len + 1];
+	    if (cercs_env_verbose) {
+		fprintf(stderr, "CERCS_ENV: query for value %s returning \"%s\".\n",
+			name, value);
+	    }
+	    return value;
 	}
+    }
+    if (cercs_env_verbose) {
+	fprintf(stderr, "CERCS_ENV: query for value %s returning NULL.\n",
+		name);
     }
 
     return NULL;
