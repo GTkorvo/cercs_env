@@ -22,6 +22,10 @@ static char *search_path[] = { "HOME",
 			       NULL,
 };
 
+#if defined(_MSC_VER)
+#define putenv _putenv
+#endif
+
 static FILE *
 find_config_file()
 {
@@ -90,18 +94,19 @@ init_env_table()
     char value_buffer[1024];
     int value_count = 0;
     char **name_values = NULL;
-    int string_table_size = 0;
+    size_t *offset_values = NULL;
+    size_t string_table_size = 0;
     char *string_table;
     int i;
 
     if (config_file == NULL) return;
     
     string_table = malloc(1);
-    name_values = malloc(sizeof(name_values[0]));
+    offset_values = malloc(sizeof(name_values[0]));
 
     while (fgets(value_buffer, sizeof(value_buffer), config_file) != NULL) {
-	int item_length = strlen(value_buffer) + 1;
-	int white_count = strspn(value_buffer, " \t\n");
+	size_t item_length = strlen(value_buffer) + 1;
+	size_t white_count = strspn(value_buffer, " \t\n");
 
 	if (white_count +1 == item_length) continue;  /* blank line */
 	if (value_buffer[white_count] == '#') continue; /* comment */
@@ -110,19 +115,20 @@ init_env_table()
 	}
 
 	string_table = realloc(string_table, string_table_size + item_length);
-	name_values = realloc(name_values, sizeof(name_values[0]) *
+	offset_values = realloc(offset_values, sizeof(offset_values[0]) *
 			      (value_count + 1));
-	/* name_values just has offsets into string table now */
-	name_values[value_count] = (char*) string_table_size;
+	/* offset_values just has offsets into string table now */
+	offset_values[value_count] = string_table_size;
 	strcpy(&string_table[string_table_size], value_buffer);
 	string_table_size += item_length;
 	value_count++;
     }
 
+    name_values = malloc(sizeof(name_values[0]) * value_count);
     for (i=0; i < value_count; i++) {
 	char *equal;
 	/* change name_values into real pointers */
-	name_values[i] = string_table + (int) (long) name_values[i];
+	name_values[i] = string_table + offset_values[i];
 	equal = strchr(name_values[i], '=');
 	if (equal != NULL) {
 	    *equal = 0;
@@ -132,6 +138,7 @@ init_env_table()
 	    }
 	}
     }
+    free(offset_values);
 
     /* 
      *  don't write env_table until the very end to reduce risk of 
@@ -145,7 +152,7 @@ extern char *
 cercs_getenv(char *name)
 {
     int i;
-    int name_len;
+    size_t name_len;
     char *value = NULL;
     if (env_table.value_count == -1) {
 	cercs_env_verbose = (getenv("CERCS_ENV_VERBOSE") != NULL);
