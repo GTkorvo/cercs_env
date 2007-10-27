@@ -30,7 +30,7 @@ fi
 case $host_os in
    linux-gnu | cygwin | mingw32)
 	case $GCC,$host_cpu in
-	yes,i*86)
+	yes,i*86|yes,x86_64)
 	    TIMING=gcc_x86
 	    ;;
 	esac
