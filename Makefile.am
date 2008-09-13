@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
 AUTOMAKE_OPTIONS = no-dependencies foreign
+ACLOCAL_AMFLAGS = -I config
 
 lib_LTLIBRARIES = libcercs_env.la
 
