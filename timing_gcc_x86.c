@@ -6,19 +6,23 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef union rdtsc_union {
-    long long t;
-    struct {
-	int low;
-	int high;
-    } ints;
+typedef struct cercs_env_time {
+      union rdtsc_union {
+	    long long t;
+	    struct {
+		  int low;
+		  int high;
+	    } ints;
+      } rdtsc_union;
+      struct timeval tv;
 } *rdtsc_time;
 
 extern void
 chr_get_time( chr_time *time)
 {
     rdtsc_time t = (rdtsc_time) time;
-    __asm__ __volatile__ ("rdtsc" : "=a" (t->ints.low), "=d" (t->ints.high));
+    gettimeofday(&t->tv, NULL);
+    __asm__ __volatile__ ("rdtsc" : "=a" (t->rdtsc_union.ints.low), "=d" (t->rdtsc_union.ints.high));
 }
 
 static int
@@ -41,19 +45,19 @@ chr_timer_start( chr_time *time)
 extern void
 chr_timer_stop( chr_time *time)
 {
-    long long now;
-    long long duration;
+    struct cercs_env_time now;
+    struct cercs_env_time duration;
 
     chr_get_time((chr_time*)&now);
     chr_timer_diff((chr_time*)&duration, (chr_time*)&now, time);
-    ((rdtsc_time) time)->t = duration;
+    *((struct cercs_env_time*) time) = duration;
 }
 
 extern int
 chr_timer_eq_zero (chr_time *time)
 {
     struct rdtsc_time *t = (struct rdtsc_time *) time; 
-    return (((rdtsc_time)t)->t == 0);
+    return (((rdtsc_time)t)->rdtsc_union.t == 0);
 }
 
 extern void
@@ -62,8 +66,15 @@ chr_timer_diff( chr_time *diff, chr_time *src1, chr_time *src2)
     long long d;
     rdtsc_time s1 = (rdtsc_time)src1;
     rdtsc_time s2 = (rdtsc_time)src2;
-    d = s1->t - s2->t;
-    ((rdtsc_time)diff)->t = d;
+    rdtsc_time dd = (rdtsc_time)diff;
+    d = s1->rdtsc_union.t - s2->rdtsc_union.t;
+    ((rdtsc_time)diff)->rdtsc_union.t = d;
+    dd->tv.tv_sec = s1->tv.tv_sec - s2->tv.tv_sec;
+    dd->tv.tv_usec = s1->tv.tv_usec - s2->tv.tv_usec;
+    if (dd->tv.tv_usec < 0) {
+       dd->tv.tv_sec--;
+       dd->tv.tv_usec += 1000000;
+    }
 }
 
 extern void
@@ -72,8 +83,14 @@ chr_timer_sum( chr_time *sum, chr_time *src1, chr_time *src2)
     long long s;
     rdtsc_time s1 = (rdtsc_time)src1;
     rdtsc_time s2 = (rdtsc_time)src2;
-    s = s1->t + s2->t;
-    ((rdtsc_time)sum)->t = s;
+    s = s1->rdtsc_union.t + s2->rdtsc_union.t;
+    ((rdtsc_time)sum)->rdtsc_union.t = s;
+    ((rdtsc_time)sum)->tv.tv_sec = s1->tv.tv_sec + s2->tv.tv_sec;
+    ((rdtsc_time)sum)->tv.tv_usec = s1->tv.tv_usec + s2->tv.tv_usec;
+    if (((rdtsc_time)sum)->tv.tv_usec >= 1000000) {
+	((rdtsc_time)sum)->tv.tv_sec++;
+	((rdtsc_time)sum)->tv.tv_usec -= 1000000;
+    }
 }
 
 
@@ -108,11 +125,18 @@ frequency_init()
 extern double
 chr_time_to_secs(chr_time *time)
 {
-    double ticks = (double) (*(long long *)time);
-    if (clock_frequency == 0.0) {
-	frequency_init();
+    rdtsc_time t = (rdtsc_time)time;
+    double ticks = (double) t->rdtsc_union.t;
+    if (t->tv.tv_sec < 60) {
+       if (clock_frequency == 0.0) {
+	  frequency_init();
+       }
+       return ticks / clock_frequency;
+    } else {
+       double ret = t->tv.tv_sec;
+       ret += (double)t->tv.tv_usec / 1000000.0;
+       return ret;
     }
-    return ticks / clock_frequency;
 }
 
 extern double
