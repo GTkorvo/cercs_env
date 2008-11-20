@@ -69,6 +69,11 @@ chr_timer_diff( chr_time *diff, chr_time *src1, chr_time *src2)
     rdtsc_time dd = (rdtsc_time)diff;
     d = s1->rdtsc_union.t - s2->rdtsc_union.t;
     ((rdtsc_time)diff)->rdtsc_union.t = d;
+/*    fprintf(stderr, "Timer diff ticks diff is %lld \n", d);
+    fprintf(stderr, "S1 sec is %ld, S2 sec is %ld\n", s1->tv.tv_sec, 
+	    s2->tv.tv_sec);
+    fprintf(stderr, "S1 usec is %ld, S2 usec is %ld\n", s1->tv.tv_usec, 
+    s2->tv.tv_usec);*/
     dd->tv.tv_sec = s1->tv.tv_sec - s2->tv.tv_sec;
     dd->tv.tv_usec = s1->tv.tv_usec - s2->tv.tv_usec;
     if (dd->tv.tv_usec < 0) {
@@ -127,15 +132,24 @@ chr_time_to_secs(chr_time *time)
 {
     rdtsc_time t = (rdtsc_time)time;
     double ticks = (double) t->rdtsc_union.t;
-    if (t->tv.tv_sec < 60) {
-       if (clock_frequency == 0.0) {
-	  frequency_init();
-       }
-       return ticks / clock_frequency;
+    double tick_time, tod_time;
+    int use_tod = 0;
+    if (clock_frequency == 0.0) {
+       frequency_init();
+    }
+    tick_time = ticks / clock_frequency;
+    tod_time = t->tv.tv_sec;
+    tod_time += (double)t->tv.tv_usec / 1000000.0;
+    use_tod = 0;
+    if (tick_time < 0.0) use_tod++;
+    if (tod_time > 60.0) use_tod++;
+    if (tick_time > 60.0) use_tod++;
+    if (use_tod) {
+/*       fprintf(stderr, "Using TOD time %g, instead of ticks %g\n", tod_time, tick_time);*/
+       return tod_time;
     } else {
-       double ret = t->tv.tv_sec;
-       ret += (double)t->tv.tv_usec / 1000000.0;
-       return ret;
+/*       fprintf(stderr, "Using tick time %g, instead of TOD %g\n", tick_time, tod_time);*/
+       return tick_time;
     }
 }
 
