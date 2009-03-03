@@ -36,6 +36,10 @@
 /* Location of installed config file */
 #undef INSTALL_DIR
 
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
 /* Name of package */
 #undef PACKAGE
 

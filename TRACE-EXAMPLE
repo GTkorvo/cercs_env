@@ -1,0 +1,28 @@
+extern "C" {
+#include <stdio.h>
+
+#include "cercs_env.h"
+}
+
+int main ( int argc, char* argv[] )
+{
+
+  cercs_trace_t t1, t2, t3;
+
+  t1 = cercs_trace_on ( "CercsTraceT1" );
+  t2 = cercs_trace_on ( "CercsTraceT2" );
+  t3 = cercs_trace_on ( "CercsTraceT3" );
+
+  cercs_trace_out ( t1, "First trace track" );
+  cercs_trace_out ( t2, "Second trace track" );
+  cercs_trace_out ( t3, "Third trace track" );
+
+  cercs_trace_off ( t1 );
+
+  cercs_trace_out ( t1, "First trace track" );
+  cercs_trace_out ( t2, "Second trace track" );
+  cercs_trace_out ( t3, "Third trace track" );
+
+  return 0;
+}
+

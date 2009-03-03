@@ -9,7 +9,7 @@ noinst_HEADERS =
 
 EXTRA_libcercs_env_la_SOURCES = timing_hrtime.c timing_gettimeofday.c timing_linux_x86.c
 
-libcercs_env_la_SOURCES = env.c
+libcercs_env_la_SOURCES = env.c trace.c bitarray.c
 libcercs_env_la_LIBADD =  $(TIMING_O)
 libcercs_env_la_LDFLAGS = -no-undefined
 libcercs_env_la_DEPENDENCIES = $(TIMING_O)
