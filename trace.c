@@ -42,7 +42,7 @@ cercs_trace_init ()
   return max_traces;
 }
 
-inline void
+extern void
 cercs_trace_reset()
 {
   trace_init = 0;
@@ -50,7 +50,7 @@ cercs_trace_reset()
   cercs_trace_init();
 }
 
-inline size_t
+extern size_t
 cercs_trace_count()
 {
   return trace_count;
@@ -72,7 +72,7 @@ cercs_trace_on (const char* env_var)
   return trace_count++;
 }
 
-inline void
+extern void
 cercs_trace_off (const cercs_trace_t trace_var)
 {
   if (!trace_init) cercs_trace_init();
