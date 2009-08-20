@@ -20,7 +20,10 @@
 #include <varargs.h>
 #endif
 #include <errno.h>
+#ifndef vfprintf
+/* really don't need a decl if there's a macro of that name */
 extern int vfprintf();
+#endif
 
 #include "cercs_env.h"
 #include "bitarray.h"
