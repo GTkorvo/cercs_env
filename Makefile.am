@@ -14,6 +14,8 @@ libcercs_env_la_LIBADD =  $(TIMING_O)
 libcercs_env_la_LDFLAGS = -no-undefined
 libcercs_env_la_DEPENDENCIES = $(TIMING_O)
 
+INSTALL_HEADER = ${srcdir}/config/install-sh -m 644
+
 include_HEADERS = cercs_env.h
 
 
