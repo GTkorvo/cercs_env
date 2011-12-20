@@ -22,10 +22,6 @@ static char *search_path[] = { "HOME",
 			       NULL,
 };
 
-#if defined(_MSC_VER)
-#define putenv _putenv
-#endif
-
 static FILE *
 find_config_file()
 {
