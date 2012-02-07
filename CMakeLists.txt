@@ -5,6 +5,11 @@ set (SRC_LIST env.c trace.c bitarray.c)
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
 
+
+IF( NOT CMAKE_BUILD_TYPE )
+SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
+ENDIF()
+
 if (CMAKE_COMPILER_IS_GNUCC AND ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "i.86")) 
 	set (TIMING timing_gcc_x86.c)
 ENDIF (CMAKE_COMPILER_IS_GNUCC AND ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "i.86")) 
@@ -43,3 +48,15 @@ INSTALL(TARGETS cercs_env cercs_env-static
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+
+# display status message for important variables
+MESSAGE( STATUS )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )
+MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
+MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )
+MESSAGE( STATUS )
+
+ENABLE_TESTING()
