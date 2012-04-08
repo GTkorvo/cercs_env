@@ -37,6 +37,7 @@ SET_TARGET_PROPERTIES(cercs_env-static PROPERTIES OUTPUT_NAME "cercs_env")
 # so we add a "lib" prefix (which is default on other platforms anyway):
 SET_TARGET_PROPERTIES(cercs_env-static PROPERTIES PREFIX "lib")
 SET_TARGET_PROPERTIES(cercs_env PROPERTIES STATIC_LIB "libcercs_env.a")
+SET_TARGET_PROPERTIES(cercs_env PROPERTIES LT_SHOULDNOTLINK "no")
 
 set (INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share)
 
