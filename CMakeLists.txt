@@ -7,6 +7,7 @@ set (SRC_LIST env.c trace.c bitarray.c)
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CreateLibtoolFile)
+include(CTest)
 
 IF( NOT CMAKE_BUILD_TYPE )
 SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
