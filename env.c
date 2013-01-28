@@ -142,6 +142,7 @@ init_env_table()
      */
     env_table.value_count = value_count;
     env_table.name_values = name_values;
+    fclose(config_file);
 }
     
 extern char *

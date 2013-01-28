@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
 cmake_policy(VERSION 2.8.3)
+
+execute_process(COMMAND "cercs_arch" ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE Cercs_Arch)
+message ( STATUS "CERCS ARCH is ${Cercs_Arch}")
+if (NOT "${Cercs_Arch}" MATCHES "") 
+   set (CMAKE_LIBRARY_ARCHITECTURE "${Cercs_Arch}")
+endif()
+
+
 project(cercs_env)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
