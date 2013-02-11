@@ -13,6 +13,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 set (SRC_LIST env.c trace.c bitarray.c)
 
+file (STRINGS "${CMAKE_SOURCE_DIR}/version.c" VERSION_TEXT REGEX "^static.*")
+STRING(REGEX REPLACE ".*Version ([0-9]+.[0-9]+.[0-9]+).*" "\\1" VERSION_TEXT "${VERSION_TEXT}")
+STRING(REGEX REPLACE "([0-9]+)[0-9.]*$" "\\1" MAJOR_VERSION_STRING ${VERSION_TEXT})
+
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CreateLibtoolFile)
@@ -43,6 +47,7 @@ set (INSTALL_TARGETS)
 if (BUILD_DYNAMIC)
   add_library(cercs_env SHARED ${SRC_LIST})
   LIST(APPEND INSTALL_TARGETS cercs_env)
+  set_target_properties( cercs_env  PROPERTIES VERSION ${VERSION_TEXT} SOVERSION 1)
 endif (BUILD_DYNAMIC)
 if (BUILD_STATIC)
   add_library(cercs_env-static STATIC ${SRC_LIST})
@@ -53,8 +58,11 @@ if (BUILD_STATIC)
   # This conflicts with the "foo.lib" import library corresponding to "foo.dll",
   # so we add a "lib" prefix (which is default on other platforms anyway):
   SET_TARGET_PROPERTIES(cercs_env-static PROPERTIES PREFIX "lib")
+  set_target_properties( cercs_env-static  PROPERTIES VERSION "${VERSION_TEXT}" SOVERSION "${MAJOR_VERSION_STRING}")
   SET_TARGET_PROPERTIES(cercs_env PROPERTIES STATIC_LIB "libcercs_env.a")
+  set_target_properties( cercs_env  PROPERTIES VERSION "${VERSION_TEXT}" SOVERSION "${MAJOR_VERSION_STRING}")
   SET_TARGET_PROPERTIES(cercs_env PROPERTIES LT_SHOULDNOTLINK "no")
+
   LIST(APPEND INSTALL_TARGETS cercs_env-static)
 endif (BUILD_STATIC)
 
