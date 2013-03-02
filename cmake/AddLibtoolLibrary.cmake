@@ -1,44 +1,29 @@
 #
-#  ADD_KAOS_LIBRARY -  Thu Feb 28 16:08:06 EST 2013
+#  ADD_LIBTOOL_LIBRARY -  Thu Feb 28 16:08:06 EST 2013
 #
 #  Use this macro like this:
-# ADD_KAOS_LIBRARY(project_name 
-#   LIBRARY library
-#   INCLUDES header1 header2 ...
-#   [REQUIRED]
-#   [STATIC]
-#   [DYNAMIC]
-#   [USE_INSTALLED]
-#   [VERBOSE]
-#   [QUIET]
+# ADD_LIBTOOL_LIBRARY(project_name 
+#   NAME library
+#   SRC_LIST  list
+#   [NO_LIBTOOL]
+#   [BUILD_STATIC_SHARED type]
+#   [DEP_LIBS  list]
 #   )
 #  
 #  the first parameter is the project name.
-#  LIBRARY is the name of the library to create
+#  NAME is the name of the library to create
 #  SRC_LIST is a list of source files to include
-
-#  REQUIRED fails the build if all not present
-#  VERBOSE includes some output about the search path
-#  QUIET suppresses the 'found' message
-#  USE_INSTALLED avoids searching home and relative-path directories
+#  NO_LIBTOOL disables creation of the .la file
+#  BUILD_STATIC_SHARED specifies to build STATIC libraries, SHARED libraries or BOTH
+#  DEP_LIBS is a list of dependency libraries to add
 #
-#  the project name is used in directory specs for searching.
-#  
-#  If both the library and include file are found, then we define the
-#  variables:
-#  <PROJECT>_FOUND   (where <PROJECT> is the upper-case version of the
-#    project argument)
-# <PROJECT>_LIB_DIR (suitable for LINK_DIRECTORY calls)
-# <PROJECT>_INCLUDE_DIR (suitable for INCLUDE_DIRECTORY calls)
-# <PROJECT>_LIBRARIES (full path to a library file)
-# HAVE_<include_file>   for each include file found (UPCASED, dot is underscore)
 #
 include(CMakeParseArguments)
 include(CreateLibtoolFile)
 
-FUNCTION (ADD_KAOS_LIBRARY)
+FUNCTION (ADD_LIBTOOL_LIBRARY)
   set(options NO_LIBTOOL)
-  set(oneValueArgs NAME)
+  set(oneValueArgs NAME BUILD_SHARED_STATIC)
   set(multiValueArgs SRC_LIST DEP_LIBS)
   CMAKE_PARSE_ARGUMENTS(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -52,18 +37,32 @@ FUNCTION (ADD_KAOS_LIBRARY)
     set(VERSION_TEXT "")
   endif (${VERSION_TEXT} MATCHES ".*${NAME}.*") 
 
-  IF (NOT (DEFINED BUILD_SHARED_LIBS))
-     set (BUILD_STATIC TRUE)
-     set (BUILD_SHARED TRUE)
-  else (NOT (DEFINED BUILD_SHARED_LIBS)) 
-     if (${BUILD_SHARED_LIBS} STREQUAL "ON") 
-       set (BUILD_STATIC FALSE)
-       set (BUILD_SHARED TRUE)
-     else (${BUILD_SHARED_LIBS} STREQUAL "ON") 
-       set (BUILD_SHARED FALSE)
-       set (BUILD_STATIC TRUE)
-     endif (${BUILD_SHARED_LIBS} STREQUAL "ON") 
-  endif (NOT (DEFINED BUILD_SHARED_LIBS)) 
+  if ("${ARG_BUILD_SHARED_STATIC}" STREQUAL "") 
+    if (DEFINED BUILD_SHARED_STATIC)
+      string(TOUPPER ${BUILD_SHARED_STATIC} BUILD_SHARED_STATIC) 
+      set (ARG_BUILD_SHARED_STATIC ${BUILD_SHARED_STATIC})
+    else (DEFINED BUILD_SHARED_STATIC)
+      set (ARG_BUILD_SHARED_STATIC "BOTH")
+      set (BUILD_SHARED_STATIC "BOTH" PARENT_SCOPE)
+    endif (DEFINED BUILD_SHARED_STATIC)
+  endif ("${ARG_BUILD_SHARED_STATIC}" STREQUAL "") 
+
+  IF (${ARG_BUILD_SHARED_STATIC} STREQUAL "BOTH")
+    set (BUILD_STATIC TRUE)
+    set (BUILD_SHARED TRUE)
+  elseif (${ARG_BUILD_SHARED_STATIC} STREQUAL "SHARED")
+    set (BUILD_STATIC FALSE)
+    set (BUILD_SHARED TRUE)
+  elseif (${ARG_BUILD_SHARED_STATIC} STREQUAL "STATIC")
+    set (BUILD_SHARED FALSE)
+    set (BUILD_STATIC TRUE)
+  else ()
+    message(STATUS "BUILD_SHARED_STATIC has unknown value ${ARG_BUILD_SHARED_STATIC}, defaulting to BOTH")
+    set (ARG_BUILD_SHARED_STATIC "BOTH")
+    set (BUILD_STATIC TRUE)
+    set (BUILD_SHARED TRUE)
+  endif ()
+
 
   set (BUILD_LIBTOOL TRUE)
   if (${ARG_NO_LIBTOOL})

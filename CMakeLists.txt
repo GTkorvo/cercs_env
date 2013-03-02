@@ -8,7 +8,7 @@ set (SRC_LIST env.c trace.c bitarray.c)
 
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
-include(AddKaosLibrary)
+include(AddLibtoolLibrary)
 include(CTest)
 
 IF( NOT CMAKE_BUILD_TYPE )
@@ -30,7 +30,7 @@ IF (NOT DEFINED(TIMING))
 ENDIF (NOT DEFINED(TIMING)) 
 set (SRC_LIST ${SRC_LIST} ${TIMING})
 
-ADD_KAOS_LIBRARY(NAME cercs_env SRC_LIST ${SRC_LIST})
+ADD_LIBTOOL_LIBRARY(NAME cercs_env SRC_LIST ${SRC_LIST})
 
 set (INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/share)
 
@@ -49,8 +49,7 @@ MESSAGE( STATUS )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
-MESSAGE( STATUS "BUILD_STATIC = ${BUILD_STATIC}" )
-MESSAGE( STATUS "BUILD_DYNAMIC = ${BUILD_DYNAMIC}" )
+MESSAGE( STATUS "BUILD_SHARED_STATIC = ${BUILD_SHARED_STATIC}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
