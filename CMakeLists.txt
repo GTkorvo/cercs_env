@@ -15,6 +15,8 @@ IF( NOT CMAKE_BUILD_TYPE )
 SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
 ENDIF()
 
+option(BUILD_SHARED_STATIC "enable building the shared or the static library" "BOTH")
+
 if (CMAKE_COMPILER_IS_GNUCC AND ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "i.86")) 
 	set (TIMING timing_gcc_x86.c)
 ENDIF (CMAKE_COMPILER_IS_GNUCC AND ("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "i.86")) 
