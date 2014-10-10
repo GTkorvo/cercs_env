@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "config.h"
 
-static char *cercs_env_version = "cercs_env Version 1.0.51 rev. 14952  -- 2013-07-08 13:52:30 -0400 (Mon, 08 Jul 2013)\n";
+static char *cercs_env_version = "cercs_env Version 1.0.52 rev. 18758  -- 2014-10-09 08:45:33 -0400 (Thu, 09 Oct 2014)\n";
 
 #if defined (__INTEL_COMPILER)
 //  Allow extern declarations with no prior decl
