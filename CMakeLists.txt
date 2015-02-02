@@ -10,6 +10,7 @@ include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(AddLibtoolLibrary)
 include(CTest)
+include(CERCS_package)
 
 IF( NOT CMAKE_BUILD_TYPE )
 SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
