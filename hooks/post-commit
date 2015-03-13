@@ -6,4 +6,5 @@ UUID=`svnlook uuid $REPOS`
   --post-data "`svnlook changed --revision $REV $REPOS`" \
   --output-document "-" \
   --timeout=2 \
-  http://bombastium.cc.gatech.edu:8080/subversion/${UUID}/notifyCommit?rev=$REV
+  http://bombastium.cc.gatech.edu:8080/subversion/${UUID}/notifyCommit?rev=$REV \
+  >> /var/log/svn/svn-notify-commit-post.log 2>&1
