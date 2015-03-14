@@ -4,5 +4,4 @@
               --timeout=10 \
               --read-timeout=10 \
               --tries=2 \
-              "http://bombastium.cc.gatech.edu:8080/jenkins/subversion/${UUID}/notifyCommit?rev=$REV" \
-              >> /var/log/svn/svn-notify-commit-post.log 2>&1
+              "http://bombastium.cc.gatech.edu:8080/jenkins/subversion/${UUID}/notifyCommit?rev=$REV" 
