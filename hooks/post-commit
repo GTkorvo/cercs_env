@@ -1,7 +1,0 @@
-/usr/bin/wget --header "Content-Type:text/plain;charset=UTF-8" \
-              --post-data "`svnlook changed --revision $REV $REPOS`" \
-              --output-document "/var/log/svn/svn-notify-commit-post" \
-              --timeout=10 \
-              --read-timeout=10 \
-              --tries=2 \
-              "http://bombastium.cc.gatech.edu:8080/jenkins/subversion/${UUID}/notifyCommit?rev=$REV" 
