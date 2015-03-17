@@ -95,7 +95,10 @@ init_env_table()
     char *string_table;
     int i;
 
-    if (config_file == NULL) return;
+    if (config_file == NULL) {
+	env_table.value_count = 0;
+	return;
+    }
     
     string_table = malloc(1);
     offset_values = malloc(sizeof(name_values[0]));
