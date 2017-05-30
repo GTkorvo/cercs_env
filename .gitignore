@@ -1,0 +1,16 @@
+
+# /
+/*.lo
+/.libs
+/Makefile
+/autom4te.cache
+/config.h
+/config.log
+/config.status
+/libcercs_env.la
+/libtool
+/stamp-h*
+/test_timing
+/cercs_env.vcproj.*
+/CMakeFiles
+/CMakeCache.txt
